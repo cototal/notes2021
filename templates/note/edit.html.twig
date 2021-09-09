@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Note{% endblock %}
+
+{% block body %}
+    <h1>Edit Note</h1>
+
+    {{ include('note/_form.html.twig', {button_label: 'Update'}) }}
+{% endblock %}

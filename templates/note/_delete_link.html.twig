@@ -1,0 +1,4 @@
+<a class="btn btn-outline-danger"
+   data-method="DELETE"
+   href="{{ path("note_delete", {id: note.id, _token: csrf_token("delete"~note.id)}) }}"
+   data-return-to="{{ path("note_index") }}">Delete</a>

@@ -1,0 +1,13 @@
+{{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-8">
+            {{ form_row(form.title) }}
+            {{ form_row(form.content) }}
+            <button class="mt-4 btn btn-primary">{{ button_label|default('Save') }}</button>
+        </div>
+        <div class="col-md-4">
+            {{ form_row(form.category) }}
+            {{ form_row(form.sequence) }}
+        </div>
+    </div>
+{{ form_end(form) }}
