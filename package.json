@@ -17,5 +17,9 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "codemirror": "^5.62.3",
+        "highlight.js": "^11.2.0"
     }
 }

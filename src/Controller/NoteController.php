@@ -117,7 +117,7 @@ class NoteController extends AbstractController
             $this->tagManager->syncTags($note);
             $this->em->flush();
 
-            return $this->redirectToRoute('note_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute("note_show", ["id" => $note->getId()]);
         }
 
         return $this->render('note/edit.html.twig', [

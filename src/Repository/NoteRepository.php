@@ -34,6 +34,11 @@ class NoteRepository extends ServiceEntityRepository
             }
         }
 
+        if (!GeneralUtils::emptyKeyValue("tag", $search)) {
+            $qb->andWhere("tag.name = :tag")
+                ->setParameter("tag", $search["tag"]);
+        }
+
         return $qb;
     }
 }

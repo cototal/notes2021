@@ -41,11 +41,15 @@
         {% for note in pagination %}
             <tr>
                 <td><a href="{{ path('note_show', {'id': note.id}) }}">{{ note.title }}</a></td>
-                <td>{{ note.category }}</td>
-                <td>{{ note.sequence }}</td>
+                <td>
+                    <a href="{{ path("note_index", {"note_search[category]": note.category}) }}">{{ note.category }}</a>
+                </td>
+                <td>
+                    <a href="{{ path("note_index", {"note_search[sequence]": note.sequence}) }}">{{ note.sequence }}</a>
+                </td>
                 <td>
                     {% for tag in note.tags %}
-                        <a class="btn btn-outline-primary btn-sm mt-1" href="">{{ tag.name }}</a>
+                        <a class="btn btn-outline-primary btn-sm mt-1" href="{{ path("note_index", {"note_search[tag]": tag.name}) }}">{{ tag.name }}</a>
                     {% endfor %}
                 </td>
                 <td>{{ note.createdAt | date("Y-m-d H:i") }}</td>
@@ -53,7 +57,7 @@
                 <td>{{ note.accessedAt | date("Y-m-d H:i") }}</td>
                 <td>
                     <div class="btn-group btn-group-sm">
-                        <a class="btn btn-outline-dark" href="{{ path('note_edit', {'id': note.id}) }}">Edit</a>
+                        <a class="btn btn-outline-dark" href="{{ path('note_edit', {id: note.id}) }}">Edit</a>
                         {{ include("note/_delete_link.html.twig", {note: note}) }}
                     </div>
                 </td>

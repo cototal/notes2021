@@ -7,9 +7,39 @@
         <div class="col-md-12 mb-4">
             <h1>
                 {{ note.title }}
-                <a class="float-right btn btn-outline-primary btn-sm" href="{{ path("note_edit", {id: note.id}) }}">Edit</a>
             </h1>
         </div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Category</th>
+                <th>Sequence</th>
+                <th>Tags</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tobdy>
+                <tr>
+                    <td>
+                        <a href="{{ path("note_index", {"note_search[category]": note.category}) }}">{{ note.category }}</a>
+                    </td>
+                    <td>
+                        <a href="{{ path("note_index", {"note_search[sequence]": note.sequence}) }}">{{ note.sequence }}</a>
+                    </td>
+                    <td>
+                        {% for tag in note.tags %}
+                            <a class="btn btn-outline-primary btn-sm mt-1" href="{{ path("note_index", {"note_search[tag]": tag.name}) }}">{{ tag.name }}</a>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn btn-outline-dark" href="{{ path('note_edit', {id: note.id}) }}">Edit</a>
+                            {{ include("note/_delete_link.html.twig", {note: note}) }}
+                        </div>
+                    </td>
+                </tr>
+            </tobdy>
+        </table>
         {{ content | raw }}
     </div>
 {% endblock %}

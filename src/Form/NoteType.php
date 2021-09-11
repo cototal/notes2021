@@ -16,7 +16,11 @@ class NoteType extends AbstractType
     {
         $builder
             ->add("title")
-            ->add("content")
+            ->add("content", null, [
+                "attr" => [
+                    "class" => "code"
+                ]
+            ])
             ->add("category")
             ->add("sequence")
             ->add("tags", TextType::class, [
