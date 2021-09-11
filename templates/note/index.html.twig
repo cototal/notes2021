@@ -5,18 +5,52 @@
 {% block body %}
     <h1>Notes</h1>
     <a href="{{ path('note_new') }}">Create new</a>
-
+    {{ form_start(searchForm) }}
+    <div class="row">
+        <div class="col-md-4">
+            {{ form_row(searchForm.title) }}
+            {{ form_row(searchForm.content) }}
+        </div>
+        <div class="col-md-4">
+            {{ form_row(searchForm.category) }}
+            {{ form_row(searchForm.sequence) }}
+        </div>
+        <div class="col-md-4">
+            {{ form_row(searchForm.tag) }}
+            <div class="btn-group mt-4">
+                <button class="btn btn-outline-primary">Search</button>
+                <a class="btn btn-outline-dark" href="{{ path("note_index") }}">Clear</a>
+            </div>
+        </div>
+    </div>
+    {{ form_end(searchForm) }}
     <table class="table">
         <thead>
             <tr>
-                <th>Title</th>
+                <th>{{ knp_pagination_sortable(pagination, "Title", "note.title") }}</th>
+                <th>{{ knp_pagination_sortable(pagination, "Category", "note.category") }}</th>
+                <th>{{ knp_pagination_sortable(pagination, "Sequence", "note.sequence") }}</th>
+                <th>Tags</th>
+                <th>{{ knp_pagination_sortable(pagination, "Created", "note.createdAt") }}</th>
+                <th>{{ knp_pagination_sortable(pagination, "Access Count", "note.accessCount") }}</th>
+                <th>{{ knp_pagination_sortable(pagination, "Last Access", "note.accessedAt") }}</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-        {% for note in notes %}
+        {% for note in pagination %}
             <tr>
                 <td><a href="{{ path('note_show', {'id': note.id}) }}">{{ note.title }}</a></td>
+                <td>{{ note.category }}</td>
+                <td>{{ note.sequence }}</td>
+                <td>
+                    {% for tag in note.tags %}
+                        <a class="btn btn-outline-primary btn-sm mt-1" href="">{{ tag.name }}</a>
+                    {% endfor %}
+                </td>
+                <td>{{ note.createdAt | date("Y-m-d H:i") }}</td>
+                <td>{{ note.accessCount }}</td>
+                <td>{{ note.accessedAt | date("Y-m-d H:i") }}</td>
                 <td>
                     <div class="btn-group btn-group-sm">
                         <a class="btn btn-outline-dark" href="{{ path('note_edit', {'id': note.id}) }}">Edit</a>
@@ -27,5 +61,7 @@
         {% endfor %}
         </tbody>
     </table>
-
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 {% endblock %}

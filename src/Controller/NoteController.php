@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Note;
+use App\Form\NoteSearchType;
 use App\Form\NoteType;
 use App\Service\MarkdownService;
+use App\Service\TagManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,21 +27,44 @@ class NoteController extends AbstractController
      * @var MarkdownService
      */
     private $markdown;
+    /**
+     * @var TagManager
+     */
+    private $tagManager;
+    /**
+     * @var PaginatorInterface
+     */
+    private $paginator;
 
-    public function __construct(EntityManagerInterface $em, MarkdownService $markdown)
+    public function __construct(
+        EntityManagerInterface $em,
+        MarkdownService $markdown,
+        TagManager $tagManager,
+        PaginatorInterface $paginator)
     {
         $this->em = $em;
         $this->markdown = $markdown;
+        $this->tagManager = $tagManager;
+        $this->paginator = $paginator;
     }
 
     /**
      * @Route("/", name="note_index", methods={"GET"})
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $notes = $this->em->getRepository(Note::class)->findBy([]);
+        $searchParams = $request->query->get("note_search", []);
+        $query = $this->em->getRepository(Note::class)->searchQuery($searchParams);
+        $pagination = $this->paginator->paginate($query, $request->query->getInt("page", 1), 50, [
+            "defaultSortFieldName" => "note.accessedAt",
+            "defaultSortDirection" => "DESC"
+        ]);
+        $searchForm = $this->createForm(NoteSearchType::class, $searchParams, [
+            "method" => "GET"
+        ]);
         return $this->render('note/index.html.twig', [
-            'notes' => $notes
+            'pagination' => $pagination,
+            "searchForm" => $searchForm->createView()
         ]);
     }
 
@@ -52,6 +78,7 @@ class NoteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->tagManager->syncTags($note);
             $this->em->persist($note);
             $this->em->flush();
 
@@ -69,6 +96,8 @@ class NoteController extends AbstractController
      */
     public function show(Note $note): Response
     {
+        $note->setAccessedAt(new \DateTimeImmutable());
+        $this->em->flush();
         $content = $this->markdown->parse($note->getContent());
         return $this->render('note/show.html.twig', [
             "note" => $note,
@@ -85,6 +114,7 @@ class NoteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->tagManager->syncTags($note);
             $this->em->flush();
 
             return $this->redirectToRoute('note_index', [], Response::HTTP_SEE_OTHER);

@@ -4,8 +4,11 @@
 
 {% block body %}
     <div class="row mt-4">
-        <div class="col-md-4 mb-4">
-            <h1>{{ note.title }}</h1>
+        <div class="col-md-12 mb-4">
+            <h1>
+                {{ note.title }}
+                <a class="float-right btn btn-outline-primary btn-sm" href="{{ path("note_edit", {id: note.id}) }}">Edit</a>
+            </h1>
         </div>
         {{ content | raw }}
     </div>

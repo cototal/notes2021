@@ -42,7 +42,7 @@ class Note
     /**
      * @ORM\Column(type="integer")
      */
-    private $accessCount;
+    private $accessCount = 1;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -67,6 +67,9 @@ class Note
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+        $this->accessedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
