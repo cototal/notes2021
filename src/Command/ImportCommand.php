@@ -58,7 +58,7 @@ class ImportCommand extends Command
             foreach ($data["Tags"] as $tag) {
                 $tag = (new Tag)
                     ->setNote($note)
-                    ->setTag($tag);
+                    ->setName($tag);
                 $this->em->persist($tag);
             }
         }
