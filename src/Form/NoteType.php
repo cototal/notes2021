@@ -17,6 +17,7 @@ class NoteType extends AbstractType
         $builder
             ->add("title")
             ->add("content", null, [
+                "required" => false,
                 "attr" => [
                     "class" => "code"
                 ]
